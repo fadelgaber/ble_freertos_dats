@@ -60,10 +60,4 @@ around line 148 :
 
 remove the # before DEFINES, save and recompile ( e.g. ./clean  ./cmp)
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- IMPORTANT: SOME EDITORS (LIKE GEANY) EXPAND TABS TO SPACES. THE 'make' UTILITY
- DOES NOT WORK WITH THAT IF THAT HAPPENS TO BE MAKE FILE !!!
-
-******************************************************************************
-
 

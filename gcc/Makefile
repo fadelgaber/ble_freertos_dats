@@ -60,6 +60,7 @@ SDKPATH			?=# Set as the path to the SDK root if not located at ../../../../..
 COMMONPATH		?=# Set as the path to the BSP common folder if not located at ../../../../common
 BOARDPATH		?=# Set as the path to the board if not located at ../../..
 PROJECTPATH		?=# Set as the path to the project if not located at ..
+PROJECTPATH_ACCL = ../../lis2dh12_accelerometer_uart
 BOARD			?=# If using a SparkFun board you can simply provide the name e.g. redboard_artemis_atp
 
 ### Project Settings
@@ -151,6 +152,13 @@ DEFINES+= -DAM_FREERTOS
 DEFINES+= -DWSF_TRACE_ENABLED
 DEFINES+= -DAM_DEBUG_PRINTF
 DEFINES+= -Dgcc
+#Accelerometer defines
+DEFINES+= -DPART_$(PART)
+DEFINES+= -DAM_CUSTOM_BDADDR
+DEFINES+= -DAM_PACKAGE_BGA
+DEFINES+= -DWSF_TRACE_ENABLED
+DEFINES+= -DAM_DEBUG_PRINTF
+DEFINES+= -DAM_PART_APOLLO3
 
 
 # Includes (Add paths to where example header files are located)
@@ -195,6 +203,15 @@ INCLUDES+= -I$(SDKPATH)/utils
 INCLUDES+= -I$(SDKPATH)/ambiq_ble/services
 INCLUDES+= -I$(SDKPATH)/third_party/exactle/wsf/sources
 INCLUDES+= -I$(BOARDPATH)/bsp
+#Accelerometer
+INCLUDES+= -I$(PROJECTPATH_ACCEL)/src
+INCLUDES+= -I$(BOARDPATH)/bsp
+INCLUDES+= -I$(SDKPATH)
+INCLUDES+= -I$(SDKPATH)/devices
+INCLUDES+= -I$(SDKPATH)/mcu/apollo3
+INCLUDES+= -I$(SDKPATH)/CMSIS/AmbiqMicro/Include
+INCLUDES+= -I$(SDKPATH)/CMSIS/ARM/Include
+INCLUDES+= -I$(COMMONPATH)/third_party/lis2dh12
 INCLUDES+=
 
 # VPATH (Add paths to where your source files are located)
@@ -229,6 +246,11 @@ VPATH+=:$(SDKPATH)/third_party/exactle/ble-host/sources/stack/hci
 VPATH+=:$(SDKPATH)/third_party/FreeRTOSv10.1.1/Source
 VPATH+=:$(SDKPATH)/third_party/exactle/ble-host/sources/sec/uecc
 VPATH+=:$(SDKPATH)/third_party/exactle/ble-host/sources/hci/ambiq
+#Accelerometer
+VPATH+= $(PROJECTPATH_ACCL)/src
+VPATH+= $(COMMONPATH)/examples/lis2dh12_accelerometer_uart
+VPATH+= $(COMMONPATH)/tools_sfe/templates
+VPATH+= $(COMMONPATH)/third_party/lis2dh12
 VPATH+=:
 
 #librarys to include
@@ -405,6 +427,10 @@ SRC += svc_wss.c
 SRC += am_devices_button.c
 SRC += am_devices_led.c
 SRC += startup_gcc.c
+#Accelerometer
+SRC+= accelerometer_functions.c
+SRC+= lis2dh12_reg.c
+SRC+= lis2dh12_platform_apollo3.c
 SRC +=
 
 ### Bootloader Tools

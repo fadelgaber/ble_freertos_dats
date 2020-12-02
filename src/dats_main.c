@@ -26,7 +26,9 @@
 #include "svc_wp.h"
 #include "calc128.h"
 #include "util/bstream.h"
+#include "accelerometer_functions.h"
 
+extern float acceleration_mg[3];
 /**************************************************************************************************
   Macros
 **************************************************************************************************/
@@ -205,13 +207,7 @@ static void datsSendData(dmConnId_t connId)
   uint8_t SendPacket[12];
   uint8_t cnt = 0;
 
-  // this could be defined global of course
-  float acceleration_mg[3];
-
-  // for demo I set some values (but these should come from the acceleration
-  acceleration_mg[0] = 6.77;
-  acceleration_mg[1] = 4.50;
-  acceleration_mg[2] = 3.75;
+  getAccelerometerReadings();
 
   // now turn the float to bytes
   cnt = byte_to_float(SendPacket, cnt, acceleration_mg[0]);

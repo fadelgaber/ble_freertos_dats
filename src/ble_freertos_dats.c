@@ -48,6 +48,7 @@
 #include <ble_freertos_dats.h>
 #include "rtos.h"
 #include "accelerometer_functions.h"
+#include "radio_task.h"
 
 //*****************************************************************************
 //
@@ -121,8 +122,6 @@ main(void)
     // Run the application.
     //
 
-    accelSetup();
-    
     run_tasks();
 
     //

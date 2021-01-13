@@ -27,8 +27,13 @@
 #include "calc128.h"
 #include "util/bstream.h"
 #include "accelerometer_functions.h"
+#include "stdio.h"
 
-extern float acceleration_mg[3];
+extern float acceleration_mg[12];
+extern int detectedIndex;
+extern float detectedScore;
+extern bool bleSent;
+
 /**************************************************************************************************
   Macros
 **************************************************************************************************/
@@ -200,29 +205,64 @@ static void datsSendData(dmConnId_t connId)
    *
    * Below just an examples
    */
-
   // max SendPacket size is MTU (default 23 - 3 = 20)
   // if longer datsAttCback will fail with code 0x77
   // if you need to sent more sent multiple
   uint8_t SendPacket[12];
+  uint8_t SendPacket2[12];
+  uint8_t SendPacket3[12];
+  uint8_t SendPacket4[12];
   uint8_t cnt = 0;
+  uint8_t cnt2 = 0;
+  uint8_t cnt3 = 0;
+  uint8_t cnt4 = 0;
 
-  getAccelerometerReadings();
+  int index = 0;
+
+  while(index<12){
+    index = getAccelerometerReadings(index);
+  }
+
+  if(detectedIndex!=0){
+    cnt = byte_to_float(SendPacket, cnt, 00.00);
+    cnt = byte_to_float(SendPacket, cnt, detectedIndex);
+    cnt = byte_to_float(SendPacket, cnt, detectedScore);
+  }
+  else{
+    cnt = byte_to_float(SendPacket, cnt, acceleration_mg[0]);
+    cnt = byte_to_float(SendPacket, cnt, acceleration_mg[1]);
+    cnt = byte_to_float(SendPacket, cnt, acceleration_mg[2]);
+  }
 
   // now turn the float to bytes
-  cnt = byte_to_float(SendPacket, cnt, acceleration_mg[0]);
-  cnt = byte_to_float(SendPacket, cnt, acceleration_mg[1]);
-  cnt = byte_to_float(SendPacket, cnt, acceleration_mg[2]);
+  
+
+  cnt2 = byte_to_float(SendPacket2, cnt2, acceleration_mg[3]);
+  cnt2 = byte_to_float(SendPacket2, cnt2, acceleration_mg[4]);
+  cnt2 = byte_to_float(SendPacket2, cnt2, acceleration_mg[5]);
+
+  cnt3 = byte_to_float(SendPacket3, cnt3, acceleration_mg[6]);
+  cnt3 = byte_to_float(SendPacket3, cnt3, acceleration_mg[7]);
+  cnt3 = byte_to_float(SendPacket3, cnt3, acceleration_mg[8]);
+
+  cnt4 = byte_to_float(SendPacket4, cnt4, acceleration_mg[9]);
+  cnt4 = byte_to_float(SendPacket4, cnt4, acceleration_mg[10]);
+  cnt4 = byte_to_float(SendPacket4, cnt4, acceleration_mg[11]);
 
   if (AttsCccEnabled(connId, DATS_WP_DAT_CCC_IDX))
   {
     AttsHandleValueNtf(connId, WP_DAT_HDL, sizeof(SendPacket), SendPacket);
+    // AttsHandleValueNtf(connId, WP_DAT_HDL, sizeof(SendPacket2), SendPacket2);
+    // AttsHandleValueNtf(connId, WP_DAT_HDL, sizeof(SendPacket3), SendPacket3);
+    // AttsHandleValueNtf(connId, WP_DAT_HDL, sizeof(SendPacket4), SendPacket4);
   }
 
   return;
 
   // another example is using a string
-  uint8_t str[] = "hello.....from dats";
+  uint8_t str[32];
+
+  //snprintf(str, 32, "Test Sending %i", detectedIndex);
   if (AttsCccEnabled(connId, DATS_WP_DAT_CCC_IDX))
   {
     /* send notification */

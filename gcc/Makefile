@@ -134,6 +134,7 @@ export PROJECTPATH
 endif
 
 CONFIG := $(PROJECTPATH)/gcc/$(BOARD)/bin
+CONFIGLITE := /home/fadel/Desktop/Projects/ml/tensorflow/tensorflow/lite/micro/tools/make/gen
 $(warning CONFIG=$(CONFIG))
 
 #******************************************************************************
@@ -256,7 +257,8 @@ VPATH+=:
 #librarys to include
 LIBS = $(SDKPATH)/mcu/apollo3/hal/gcc/bin/libam_hal.a
 LIBS+= $(BOARDPATH)/bsp/gcc/bin/libam_bsp.a
-LIBS+=
+LIBS+= $(PROJECTPATH)/gcc/libmotiondetector.a
+LIBS+= $(PROJECTPATH)/gcc/libtensorflow-microlite.a
 
 # Compilation Units (Add all the .c files you need to compile)
 SRC = smpi_act.c
@@ -431,7 +433,6 @@ SRC += startup_gcc.c
 SRC+= accelerometer_functions.c
 SRC+= lis2dh12_reg.c
 SRC+= lis2dh12_platform_apollo3.c
-SRC +=
 
 ### Bootloader Tools
 ASB_UPLOADER=$(PYTHON3) $(COMMONPATH)/tools_sfe/asb/asb.py
@@ -476,10 +477,95 @@ all clean:
 else
 
 CSRC = $(filter %.c,$(SRC))
+# CSRC += error_reporter.c
+# CSRC += simple_memory_allocator.c
+# CSRC += logistic.c
+# CSRC += micro_error_reporter.c
+# CSRC += dequantize.c
+# CSRC += circular_buffer.c
+# CSRC += recording_micro_allocator.c
+# CSRC += micro_interpreter.c
+# CSRC += arm_bitreversal2.c
+# CSRC += schema_utils.c
+# CSRC += all_ops_resolver.c
+# CSRC += tanh.c
+# CSRC += recording_simple_memory_allocator.c
+# CSRC += fully_connected.c
+# CSRC += arm_mean_q15.c
+# CSRC += logical.c
+# CSRC += motion_detector_model_data.c
+# CSRC += output_handler.c
+# CSRC += main_functions.c
+# CSRC += l2norm.c
+# CSRC += arg_min_max.c
+# CSRC += tensor_utils.c
+# CSRC += prelu.c
+# CSRC += comparisons.c
+# CSRC += micro_time.c
+# CSRC += round.c
+# CSRC += arm_cfft_radix4_q15.c
+# CSRC += arm_rfft_q15.c
+# CSRC += op_resolver.c
+# CSRC += hard_swish.c
+# CSRC += resize_nearest_neighbor.c
+# CSRC += micro_string.c
+# CSRC += arm_max_q7.c
+# CSRC += accelerometer_handler.c
+# CSRC += arm_mult_q15.c
+# CSRC += shape.c
+# CSRC += quantization_util.c
+# CSRC += sub.c
+# CSRC += debug_log.c
+# CSRC += micro_profiler.c
+# CSRC += led_toggle.c
+# CSRC += concatenation.c
+# CSRC += linear_memory_planner.c
+# CSRC += memory_helpers.c
+# CSRC += pooling.c
+# CSRC += pack.c
+# CSRC += elementwise.c
+# CSRC += conv.c
+# CSRC += activations.c
+# CSRC += greedy_memory_planner.c
+# CSRC += floor.c
+# CSRC += ethosu.c
+# CSRC += arm_common_tables.c
+# CSRC += micro_allocator.c
+# CSRC += test_helpers.c
+# CSRC += softmax.c
+# CSRC += arm_dot_prod_q15.c
+# CSRC += micro_utils.c
+# #CSRC += main.c
+# CSRC += svdf.c
+# CSRC += keyword_scrambled_model_data.c
+# CSRC += reduce.c
+# CSRC += ceil.c
+# CSRC += arm_rfft_init_q15.c
+# CSRC += neg.c
+# CSRC += add.c
+# CSRC += quantize.c
+# CSRC += reshape.c
+# CSRC += kernel_util.c
+# CSRC += gesture_predictor.c
+# CSRC += common.c
+# CSRC += split_v.c
+# CSRC += arm_cfft_q15.c
+# CSRC += maximum_minimum.c
+# CSRC += pad.c
+# CSRC += split.c
+# CSRC += arm_const_structs.c
+# CSRC += strided_slice.c
+# CSRC += depthwise_conv.c
+# CSRC += test_conv_model.c
+# CSRC += mul.c
+# CSRC += kernel_runner.c
+# CSRC += unpack.c
+# CSRC += flatbuffer_conversions.c
 ASRC = $(filter %.s,$(SRC))
 
 OBJS = $(CSRC:%.c=$(CONFIG)/%.o)
 OBJS+= $(ASRC:%.s=$(CONFIG)/%.o)
+# OBJS+= $(CSRC:%.c=$(CONFIGLITE)/%.o)
 
 DEPS = $(CSRC:%.c=$(CONFIG)/%.d)
 DEPS+= $(ASRC:%.s=$(CONFIG)/%.d)
@@ -521,6 +607,7 @@ $(CONFIG):
 
 $(CONFIG)/%.o: %.c $(CONFIG)/%.d
 	@echo " Compiling $(COMPILERNAME) $<" ;\
+	
 	$(CC) -c $(CFLAGS) $< -o $@
 
 $(CONFIG)/%.o: %.s $(CONFIG)/%.d
@@ -529,6 +616,8 @@ $(CONFIG)/%.o: %.s $(CONFIG)/%.d
 
 $(CONFIG)/$(TARGET)_asb.axf: LINKER_FILE := $(COMMONPATH)/examples/ble_freertos_dats/gcc/ble_freertos_dats.ld
 $(CONFIG)/$(TARGET)_asb.axf: $(OBJS) $(LIBS)
+
+	@echo " Files are ${OBJS} $<" ;\
 	@echo " Linking $(COMPILERNAME) $@ with script $(LINKER_FILE)";\
 	$(CC) -Wl,-T,$(LINKER_FILE) -o $@ $(OBJS) $(LFLAGS)
 

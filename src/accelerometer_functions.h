@@ -1,3 +1,5 @@
 void accelSetup(void);
 
-void getAccelerometerReadings(void);
+int getAccelerometerReadings(int index);
+
+void getSeoncdAccelReadings(void);

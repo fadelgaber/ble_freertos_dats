@@ -32,26 +32,29 @@ SOFTWARE.
 
 //
 // Function Declarations
-uint32_t initAccel(void);
+uint32_t initDatsAccelerometer(void);
 
 //
 // Global Variables
+extern lis2dh12_platform_apollo3_if_t dev_if;
+extern lis2dh12_ctx_t dev_ctx;
+
 axis3bit16_t data_raw_acceleration;
 axis1bit16_t data_raw_temperature;
 float acceleration_mg[3];
 float temperature_degC;
 
-lis2dh12_platform_apollo3_if_t dev_if = {
-    .iomHandle  = NULL,                             // Needs to be initialized later
-    .addCS      = AM_BSP_ACCELEROMETER_I2C_ADDRESS, // Gets the accelerometer I2C address for the board
-    .useSPI     = false,                            // Using I2C in this example
-};
+// lis2dh12_platform_apollo3_if_t dev_if = {
+//     .iomHandle  = NULL,                             // Needs to be initialized later
+//     .addCS      = AM_BSP_ACCELEROMETER_I2C_ADDRESS, // Gets the accelerometer I2C address for the board
+//     .useSPI     = false,                            // Using I2C in this example
+// };
 
-lis2dh12_ctx_t dev_ctx = {
-    .write_reg  = lis2dh12_write_platform_apollo3,  // write bytes function
-    .read_reg   = lis2dh12_read_platform_apollo3,   // read bytes function
-    .handle     = (void*)&dev_if,                   // Apollo3-specific interface information
-};
+// lis2dh12_ctx_t dev_ctx = {
+//     .write_reg  = lis2dh12_write_platform_apollo3,  // write bytes function
+//     .read_reg   = lis2dh12_read_platform_apollo3,   // read bytes function
+//     .handle     = (void*)&dev_if,                   // Apollo3-specific interface information
+// };
 
 void accelSetup( void ){
 
@@ -70,7 +73,7 @@ void accelSetup( void ){
     am_util_stdio_terminal_clear();
 
     // Initialize accelerometer (uses board-specific code -- see function below)
-    stat = initAccel();
+    stat = initDatsAccelerometer();
     if( stat != 0 ){
         am_util_stdio_printf("Accelerometer initialization failed with code: %d\n", stat);
     }
@@ -78,8 +81,6 @@ void accelSetup( void ){
 }
 
 void getAccelerometerReadings(void){
-        am_hal_gpio_output_set(AM_BSP_GPIO_LED_GREEN);
-        
         lis2dh12_reg_t reg;
 
         // Check if accelerometer is ready with new acceleration data
@@ -98,8 +99,7 @@ void getAccelerometerReadings(void){
         }
 }
 
-
-uint32_t initAccel( void ){
+uint32_t initDatsAccelerometer( void ){
 
     uint32_t retVal32 = 0;
     static uint8_t whoamI = 0;

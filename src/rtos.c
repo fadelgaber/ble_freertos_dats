@@ -179,6 +179,7 @@ setup_task(void *pvParameters)
     // Create the functional tasks
     //
     xTaskCreate(RadioTask, "RadioTask", 512, 0, 3, &radio_task_handle);
+    xTaskCreate(motionDetectorTask, "motionDetectorTask", 512, 0, 1, &radio_task_handle);
     //
     // The setup operations are complete, so suspend the setup task now.
     //

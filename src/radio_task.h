@@ -61,5 +61,6 @@ extern TaskHandle_t radio_task_handle;
 //*****************************************************************************
 extern void RadioTaskSetup(void);
 extern void RadioTask(void *pvParameters);
+extern void motionDetectorTask(void *pvParameters);
 
 #endif // RADIO_TASK_H

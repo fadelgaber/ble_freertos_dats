@@ -291,6 +291,9 @@ RadioTask(void *pvParameters)
     //
     am_util_debug_printf("Starting wicentric trace:\n\n");
 #endif
+    
+
+    //accelSetup();
 
     //
     // Initialize the main ExactLE stack.
@@ -311,4 +314,9 @@ RadioTask(void *pvParameters)
         wsfOsDispatcher();
 
     }
+}
+
+void motionDetectorTask(void *pvParameters){
+
+    runMotionDetector();
 }

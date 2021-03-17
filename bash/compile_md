@@ -1,0 +1,10 @@
+#/bin/bash
+make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge clean
+make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge motion_detector_bin
+
+cp tensorflow/lite/micro/tools/make/gen/sparkfun_edge_cortex-m4/lib/libtensorflow-microlite.a /home/fadel/Desktop/Projects/ml/AmbiqSuiteSDK/boards_sfe/common/examples/ble_freertos_dats/gcc
+ 
+ar -r libmotiondetector.a $(find tensorflow/lite/micro/tools/make/gen -name \*.o)
+
+cp libmotiondetector.a /home/fadel/Desktop/Projects/ml/AmbiqSuiteSDK/boards_sfe/common/examples/ble_freertos_dats/gcc
+
